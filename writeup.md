@@ -1,6 +1,6 @@
-#Behavioral Cloning
+# **Behavioral Cloning**
 
-##Writeup Report
+## Writeup Report
 
 ---
 
@@ -25,12 +25,12 @@ The goals / steps of this project are the following:
 [image7]: ./report/center_2017_03_17_23_56_54_524.jpg "easy_failed Image"
 
 ## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
+### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
 ---
-###Files Submitted & Code Quality
+### Files Submitted & Code Quality
 
-####1. Submission includes all required files and can be used to run the simulator in autonomous mode
+#### 1. Submission includes all required files and can be used to run the simulator in autonomous mode
 
 My project includes the following files:
 * model.py containing the script to create and train the model
@@ -39,19 +39,19 @@ My project includes the following files:
 * run1.mp4 to show the model driving in autonomous mode
 * writeup_report.md summarizing the results
 
-####2. Submission includes functional code
+#### 2. Submission includes functional code
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track one by executing 
 ```sh
 python drive.py model.h5
 ```
 
-####3. Submission code is usable and readable
+#### 3. Submission code is usable and readable
 
 The model.py file contains the code for training and saving the Nvidia convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
 
-###Model Architecture and Training Strategy
+### Model Architecture and Training Strategy
 
-####1. An appropriate model architecture has been employed
+#### 1. An appropriate model architecture has been employed
 
 There are two models I tried in this project, the first one is LeNet5 model. However, the result is not good enough to pass the test. I guess it's becasue LeNet5 model is more suitable for the classification than regression.
 
@@ -61,6 +61,7 @@ Here is the model:
 
 Here is the code:
 
+```python
 def LeNet5(input_shape):
     '''
     LeNet model with keras (model.py line 103-127)
@@ -82,7 +83,7 @@ def LeNet5(input_shape):
     model.add(Dense(84))
     model.add(Dense(1))
     return model
-
+```
 
 The second model I tried to use is Nvidia CNN structure. It includes RELU layers to introduce nonlinearity, and the data is normalized in the model using a Keras lambda layer. [Here](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/) is the reference website of this model.
 
@@ -92,6 +93,7 @@ Here is the model:
 
 Here is the code:
 
+```python
 def NV(input_shape):
     '''
     Nvidia CNN model with keras (model.py line 129-161)
@@ -117,9 +119,9 @@ def NV(input_shape):
     #ouptut is 1 because it's regression, not classifier
     model.add(Dense(1))
     return model
+```
 
-
-####2. Attempts to reduce overfitting in the model
+#### 2. Attempts to reduce overfitting in the model
 
 I split the whole data to 80% training and 20% validation by using the code:
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
@@ -130,21 +132,21 @@ the code for dropout layer in keras is like:
 model.add(Dropout(0.5))
  
 
-####3. Model parameter tuning
+#### 3. Model parameter tuning
 
 The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 175).
 
 model.compile(loss='mse', optimizer='adam')
 
-####4. Appropriate training data
+#### 4. Appropriate training data
 
 Training data was chosen to keep the vehicle driving on the road. I used a all three camera(center, left and right) to train my car. In this way, the vehicle can learn how to steer if the car drifts off to the left or the right. Another way I know is recording recovery driving from the sides of the road.
 
 For details about how I created the training data, see the next section. 
 
-###Model Architecture and Training Strategy
+### Model Architecture and Training Strategy
 
-####1. Solution Design Approach
+#### 1. Solution Design Approach
 
 
 My first step was to use a convolution neural network model similar to the LeNet model. I thought this model might be appropriate because it also learns from images. However, the result is not quite good andd I guess the reason is bacause this model is only suitable for classification, not regression. Therefore, I try to use Nvidia CNN structure.
@@ -156,7 +158,7 @@ The final step was to run the simulator to see how well the car was driving arou
 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
 
-####2. Final Model Architecture
+#### 2. Final Model Architecture
 
 The final model architecture consisted of a convolution neural network with the following layers and layer sizes:
 
@@ -183,7 +185,7 @@ Here is a visualization of the architecture:
 
 ![alt text][image2]
 
-####3. Creation of the Training Set & Training Process
+#### 3. Creation of the Training Set & Training Process
 
 To capture good driving behavior, I first recorded two laps on track one using center lane driving. The first laps with slow speed drive to make the vehicle staying on the center most of time. The second laps with max speed to get data with large steer number around the left/right corner.
 
@@ -211,6 +213,6 @@ I saved the model which can pass 80% tarck, then look at the spot which fell off
 Then, I train the model again based on the model with 80% track passed. In that case, it's like fine tune the model with more data at fell off spot. Finally, it can pass all track.
 
 
-###Future Improvements:
+### Future Improvements:
 The model can not pass the track 2, and in some training, I did see some overfitting. i'll try to use drop out method to improve the model in the futrure.
 
